@@ -1,5 +1,5 @@
 absl-py==0.14.0
-anyio==3.3.2
+# anyio==3.3.2
 apturl==0.5.2
 argon2-cffi==21.1.0
 astunparse==1.6.3
