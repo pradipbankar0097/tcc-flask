@@ -1,56 +1,56 @@
 # absl-py==0.14.0
 # anyio==3.3.2
 # apturl==0.5.2
-argon2-cffi==21.1.0
-astunparse==1.6.3
-attrs==21.2.0
-Babel==2.9.1
-backcall==0.2.0
-bcrypt==3.1.7
-bleach==4.1.0
-blinker==1.4
-Brlapi==0.7.0
-CacheControl==0.12.6
-cachetools==4.2.2
-certifi==2019.11.28
-cffi==1.14.6
-chardet==3.0.4
-clang==5.0
-click==8.0.1
-colorama==0.4.3
-command-not-found==0.3
-cryptography==2.8
-cupshelpers==1.0
-cycler==0.10.0
-dbus-python==1.2.16
-debugpy==1.4.3
-decorator==5.1.0
-defer==1.0.6
-defusedxml==0.7.1
-distro==1.4.0
-distro-info===0.23ubuntu1
-duplicity==0.8.12.0
-easyocr==1.4.1
-entrypoints==0.3
-fasteners==0.14.1
-firebase-admin==5.0.3
+# argon2-cffi==21.1.0
+# astunparse==1.6.3
+# attrs==21.2.0
+# Babel==2.9.1
+# backcall==0.2.0
+# bcrypt==3.1.7
+# bleach==4.1.0
+# blinker==1.4
+# Brlapi==0.7.0
+# CacheControl==0.12.6
+# cachetools==4.2.2
+# certifi==2019.11.28
+# cffi==1.14.6
+# chardet==3.0.4
+# clang==5.0
+# click==8.0.1
+# colorama==0.4.3
+# command-not-found==0.3
+# cryptography==2.8
+# cupshelpers==1.0
+# cycler==0.10.0
+# dbus-python==1.2.16
+# debugpy==1.4.3
+# decorator==5.1.0
+# defer==1.0.6
+# defusedxml==0.7.1
+# distro==1.4.0
+# distro-info===0.23ubuntu1
+# duplicity==0.8.12.0
+# easyocr==1.4.1
+# entrypoints==0.3
+# fasteners==0.14.1
+# firebase-admin==5.0.3
 Flask==2.0.1
-flatbuffers==1.12
-future==0.18.2
-gast==0.4.0
-google-api-core==2.0.1
-google-api-python-client==2.23.0
-google-auth==1.35.0
-google-auth-httplib2==0.1.0
-google-auth-oauthlib==0.4.6
-google-cloud-core==2.0.0
-google-cloud-firestore==2.3.3
-google-cloud-storage==1.42.2
-google-crc32c==1.2.0
-google-pasta==0.2.0
-google-resumable-media==2.0.3
-googleapis-common-protos==1.53.0
-grpcio==1.40.0
+# flatbuffers==1.12
+# future==0.18.2
+# gast==0.4.0
+# google-api-core==2.0.1
+# google-api-python-client==2.23.0
+# google-auth==1.35.0
+# google-auth-httplib2==0.1.0
+# google-auth-oauthlib==0.4.6
+# google-cloud-core==2.0.0
+# google-cloud-firestore==2.3.3
+# google-cloud-storage==1.42.2
+# google-crc32c==1.2.0
+# google-pasta==0.2.0
+# google-resumable-media==2.0.3
+# googleapis-common-protos==1.53.0
+# grpcio==1.40.0
 gunicorn==20.1.0
 h5py==3.1.0
 httplib2==0.19.1
