@@ -1,6 +1,7 @@
 click==8.0.1
 cycler==0.10.0
 Flask==2.0.1
+gunicorn
 itsdangerous==2.0.1
 Jinja2==3.0.1
 joblib==1.0.1
@@ -18,6 +19,7 @@ regex==2021.9.30
 scikit-learn==1.0
 scipy==1.7.1
 seaborn==0.11.2
+setuptools
 six==1.16.0
 sklearn==0.0
 threadpoolctl==3.0.0
