@@ -2,41 +2,41 @@
 from app import app
 from flask import request, render_template
 import os
-import pandas as pd
-import numpy as np
-import seaborn as sns
-# import matplotlib.pyplot as plt
-import warnings
-import re
-import nltk
-import string
-from app.static import nlp_utils
-from app.static import contractions
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize,sent_tokenize
-from nltk.stem import PorterStemmer, LancasterStemmer, SnowballStemmer
-from sklearn import preprocessing
-from sklearn.feature_selection import SelectFromModel
+# import pandas as pd
+# import numpy as np
+# import seaborn as sns
+# # import matplotlib.pyplot as plt
+# import warnings
+# import re
+# import nltk
+# import string
+# from app.static import nlp_utils
+# from app.static import contractions
+# from nltk.corpus import stopwords
+# from nltk.stem import WordNetLemmatizer
+# from nltk.tokenize import word_tokenize,sent_tokenize
+# from nltk.stem import PorterStemmer, LancasterStemmer, SnowballStemmer
+# from sklearn import preprocessing
+# from sklearn.feature_selection import SelectFromModel
 
-from sklearn.model_selection import train_test_split, KFold, cross_val_score
-from sklearn.metrics import f1_score, precision_score, recall_score, precision_recall_curve, fbeta_score, confusion_matrix
-from sklearn.metrics import roc_auc_score, roc_curve
+# from sklearn.model_selection import train_test_split, KFold, cross_val_score
+# from sklearn.metrics import f1_score, precision_score, recall_score, precision_recall_curve, fbeta_score, confusion_matrix
+# from sklearn.metrics import roc_auc_score, roc_curve
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import MultinomialNB, BernoulliNB
-from sklearn.svm import LinearSVC
-from sklearn.ensemble import RandomForestClassifier
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.neighbors import KNeighborsClassifier
+# from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+# from sklearn.svm import LinearSVC
+# from sklearn.ensemble import RandomForestClassifier
 
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from nltk import ngrams,bigrams,trigrams
-import imutils
-from PIL import Image
-from PIL.ImageFilter import BoxBlur
-import cv2
-import easyocr
-warnings.filterwarnings('ignore')
+# from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+# from nltk import ngrams,bigrams,trigrams
+# import imutils
+# from PIL import Image
+# from PIL.ImageFilter import BoxBlur
+# import cv2
+# import easyocr
+# warnings.filterwarnings('ignore')
 
 # df=pd.read_csv('app/static/train.csv') 
 # alphanumeric = lambda x: re.sub('\w*\d\w*', ' ', x)
@@ -160,7 +160,7 @@ warnings.filterwarnings('ignore')
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Initiate a Tfidf vectorizer
-tfv = TfidfVectorizer(ngram_range=(1,1), stop_words='english')
+# tfv = TfidfVectorizer(ngram_range=(1,1), stop_words='english')
 
 # X_train_fit = tfv.fit_transform(X_train)  
 # X_test_fit = tfv.transform(X_test)  
@@ -210,45 +210,45 @@ def forimage():
 	# Execute if request is get
 	if request.method == "GET":
 		return render_template("forimage.html")
-	# Execute if request is POST
-	if request.method == "POST":
-		# Get uploaded image
-		file_upload = request.files['file_upload']
-		filename = file_upload.filename
+	# # Execute if request is POST
+	# if request.method == "POST":
+	# 	# Get uploaded image
+	# 	file_upload = request.files['file_upload']
+	# 	filename = file_upload.filename
 
-		# Resize and save the uploaded image
-		uploaded_image = Image.open(file_upload)
-		# black_img = Image.open(os.path.join(app.config['INITIAL_FILE_UPLOADS'],'black.jpg'))
-		copy_to_blur = uploaded_image.copy()
-		# print(type(uploaded_image))
-		# uploaded_image = uploaded_image.convert('RGB')
-		uploaded_image.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
+	# 	# Resize and save the uploaded image
+	# 	uploaded_image = Image.open(file_upload)
+	# 	# black_img = Image.open(os.path.join(app.config['INITIAL_FILE_UPLOADS'],'black.jpg'))
+	# 	copy_to_blur = uploaded_image.copy()
+	# 	# print(type(uploaded_image))
+	# 	# uploaded_image = uploaded_image.convert('RGB')
+	# 	uploaded_image.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
 		
-		# Read uploaded image as array
-		uploaded_image = cv2.imread(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
-		# ocr = optical character recognition
-		reader = easyocr.Reader(['en'],gpu=True)
-		all_data = reader.readtext(uploaded_image)
-		for word in all_data:
-			# print(word)
-			comment1_vect = tfv.transform([word[1],])
-			toxic_percent = randomforest.predict_proba(comment1_vect)[:,1]*100
-			if toxic_percent[0]>90:
-				print(word)
-				print('word is '+str(toxic_percent[0])+'% toxic')
-				bbox,text,prob = word
-				(tl, tr, br, bl) = bbox
-				tl = (int(tl[0]), int(tl[1]))
-				tr = (int(tr[0]), int(tr[1]))
-				br = (int(br[0]), int(br[1]))
-				bl = (int(bl[0]), int(bl[1]))
-				cv2.rectangle(uploaded_image, tl, br, (0, 255, 0), -1)
-				# cv2.imshow("iiiiii",uploaded_image)
-				cv2.imwrite(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'blur.jpg'),uploaded_image)
-				# copy_to_blur.paste(black_img.resize((int(word[0][2])-int(word[0][0])),int(word[0][3]-int(word[0][1]))),(int(word[0][0]),int(word[0][1])))
-				# copy_to_blur.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'result.png'))
-				# copy_to_blur.filter(BoxBlur(1)).save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'blur.jpg'))
-		return render_template('forimage.html',param="result is "+all_data[0][1])
+	# 	# Read uploaded image as array
+	# 	uploaded_image = cv2.imread(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
+	# 	# ocr = optical character recognition
+	# 	reader = easyocr.Reader(['en'],gpu=True)
+	# 	all_data = reader.readtext(uploaded_image)
+	# 	for word in all_data:
+	# 		# print(word)
+	# 		comment1_vect = tfv.transform([word[1],])
+	# 		toxic_percent = randomforest.predict_proba(comment1_vect)[:,1]*100
+	# 		if toxic_percent[0]>90:
+	# 			print(word)
+	# 			print('word is '+str(toxic_percent[0])+'% toxic')
+	# 			bbox,text,prob = word
+	# 			(tl, tr, br, bl) = bbox
+	# 			tl = (int(tl[0]), int(tl[1]))
+	# 			tr = (int(tr[0]), int(tr[1]))
+	# 			br = (int(br[0]), int(br[1]))
+	# 			bl = (int(bl[0]), int(bl[1]))
+	# 			cv2.rectangle(uploaded_image, tl, br, (0, 255, 0), -1)
+	# 			# cv2.imshow("iiiiii",uploaded_image)
+	# 			cv2.imwrite(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'blur.jpg'),uploaded_image)
+	# 			# copy_to_blur.paste(black_img.resize((int(word[0][2])-int(word[0][0])),int(word[0][3]-int(word[0][1]))),(int(word[0][0]),int(word[0][1])))
+	# 			# copy_to_blur.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'result.png'))
+	# 			# copy_to_blur.filter(BoxBlur(1)).save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'blur.jpg'))
+	# 	return render_template('forimage.html',param="result is "+all_data[0][1])
 
 
 # Main function
