@@ -38,141 +38,147 @@ import cv2
 import easyocr
 warnings.filterwarnings('ignore')
 
-df=pd.read_csv('app/static/train.csv') 
-alphanumeric = lambda x: re.sub('\w*\d\w*', ' ', x)
-punc_lower = lambda x: re.sub('[%s]' % re.escape(string.punctuation), ' ', x.lower())
-remove_n = lambda x: re.sub("\n", " ", x)
-remove_non_ascii = lambda x: re.sub(r'[^\x00-\x7f]',r' ', x)
-df['comment_text'] = df['comment_text'].map(alphanumeric).map(punc_lower).map(remove_n).map(remove_non_ascii)
-# Removing special characters
-Insulting_comment_df=df.loc[:,['id','comment_text','insult']]
-# Creating insult dataframe
-IdentityHate_comment_df=df.loc[:,['id','comment_text','identity_hate']]
-# Creating identityhate dataframe
-Obscene_comment_df=df.loc[:,['id','comment_text','obscene']]
-# Creating obscene comment dataframe
-Threatening_comment_df=df.loc[:,['id','comment_text','threat']]
-# Creating threatening dataframe
-Severetoxic_comment_df=df.loc[:,['id','comment_text','severe_toxic']]
-# Creating severtoxic dataframe
-Toxic_comment_df=df.loc[:,['id','comment_text','toxic']]
-# Creating toxic dataframe
-Toxic_comment_balanced_1 = Toxic_comment_df[Toxic_comment_df['toxic'] == 1].iloc[0:5000,:]
-# Selecting only 5000 toxic comments 
-Toxic_comment_balanced_0 = Toxic_comment_df[Toxic_comment_df['toxic'] == 0].iloc[0:5000,:]
-# Selecting only 5000 non toxic comments 
-# Toxic_comment_balanced_1.shape
-# # Shape of Toxic_comment_balanced_1
-# Toxic_comment_balanced_0.shape
-# Shape of Toxic_comment_balanced_0
-# Toxic_comment_balanced_1['toxic'].value_counts()
-# # Value_counts of Toxic_comment_balanced_1
-# Toxic_comment_balanced_0['toxic'].value_counts()
-# Value_counts of Toxic_comment_balanced_0
-Toxic_comment_balanced=pd.concat([Toxic_comment_balanced_1,Toxic_comment_balanced_0])
-## concatenating toxic and non toxic comments
-Severetoxic_comment_df_1 = Severetoxic_comment_df[Severetoxic_comment_df['severe_toxic'] == 1].iloc[0:1595,:]
-# selecting 1595 values of Severetoxic_comment_df_1
-Severetoxic_comment_df_0 = Severetoxic_comment_df[Severetoxic_comment_df['severe_toxic'] == 0].iloc[0:1595,:]
-# selecting 1595 values of Severetoxic_comment_df_0
-Severe_toxic_comment_balanced=pd.concat([Severetoxic_comment_df_1,Severetoxic_comment_df_0])
-# Concatenating Severetoxic_comment_df_1 and Severetoxic_comment_df_0
-Obscene_comment_df_1 = Obscene_comment_df[Obscene_comment_df['obscene'] == 1].iloc[0:5000,:] 
-Obscene_comment_df_0 = Obscene_comment_df[Obscene_comment_df['obscene'] == 0].iloc[0:5000,:]
-Obscene_comment_balanced = pd.concat([Obscene_comment_df_1,Obscene_comment_df_0])
-Threatening_comment_df_1 = Threatening_comment_df[Threatening_comment_df['threat'] == 1].iloc[0:478,:]
-Threatening_comment_df_0 = Threatening_comment_df[Threatening_comment_df['threat'] == 0].iloc[0:478,:]
-Threatening_comment_balanced = pd.concat([Threatening_comment_df_1,Threatening_comment_df_0])
-Insulting_comment_df_1 = Insulting_comment_df[Insulting_comment_df['insult'] == 1].iloc[0:5000,:]
-Insulting_comment_df_0 = Insulting_comment_df[Insulting_comment_df['insult'] == 0].iloc[0:5000,:]
-Insulting_comment_balanced = pd.concat([Insulting_comment_df_1,Insulting_comment_df_0])
-IdentityHate_comment_df_1 = IdentityHate_comment_df[IdentityHate_comment_df['identity_hate'] == 1].iloc[0:1405,:]
-IdentityHate_comment_df_0 = IdentityHate_comment_df[IdentityHate_comment_df['identity_hate'] == 0].iloc[0:1405,:]
-IdentityHate_comment_balanced = pd.concat([IdentityHate_comment_df_1,IdentityHate_comment_df_0])
-def cv_tf_train_test(dataframe,label,vectorizer,ngram):
+# df=pd.read_csv('app/static/train.csv') 
+# alphanumeric = lambda x: re.sub('\w*\d\w*', ' ', x)
+# punc_lower = lambda x: re.sub('[%s]' % re.escape(string.punctuation), ' ', x.lower())
+# remove_n = lambda x: re.sub("\n", " ", x)
+# remove_non_ascii = lambda x: re.sub(r'[^\x00-\x7f]',r' ', x)
+# df['comment_text'] = df['comment_text'].map(alphanumeric).map(punc_lower).map(remove_n).map(remove_non_ascii)
+# # Removing special characters
+# Insulting_comment_df=df.loc[:,['id','comment_text','insult']]
+# # Creating insult dataframe
+# IdentityHate_comment_df=df.loc[:,['id','comment_text','identity_hate']]
+# # Creating identityhate dataframe
+# Obscene_comment_df=df.loc[:,['id','comment_text','obscene']]
+# # Creating obscene comment dataframe
+# Threatening_comment_df=df.loc[:,['id','comment_text','threat']]
+# # Creating threatening dataframe
+# Severetoxic_comment_df=df.loc[:,['id','comment_text','severe_toxic']]
+# # Creating severtoxic dataframe
+# Toxic_comment_df=df.loc[:,['id','comment_text','toxic']]
+# # Creating toxic dataframe
+# Toxic_comment_balanced_1 = Toxic_comment_df[Toxic_comment_df['toxic'] == 1].iloc[0:5000,:]
+# # Selecting only 5000 toxic comments 
+# Toxic_comment_balanced_0 = Toxic_comment_df[Toxic_comment_df['toxic'] == 0].iloc[0:5000,:]
+# # Selecting only 5000 non toxic comments 
+# # Toxic_comment_balanced_1.shape
+# # # Shape of Toxic_comment_balanced_1
+# # Toxic_comment_balanced_0.shape
+# # Shape of Toxic_comment_balanced_0
+# # Toxic_comment_balanced_1['toxic'].value_counts()
+# # # Value_counts of Toxic_comment_balanced_1
+# # Toxic_comment_balanced_0['toxic'].value_counts()
+# # Value_counts of Toxic_comment_balanced_0
+# Toxic_comment_balanced=pd.concat([Toxic_comment_balanced_1,Toxic_comment_balanced_0])
+# ## concatenating toxic and non toxic comments
+# Severetoxic_comment_df_1 = Severetoxic_comment_df[Severetoxic_comment_df['severe_toxic'] == 1].iloc[0:1595,:]
+# # selecting 1595 values of Severetoxic_comment_df_1
+# Severetoxic_comment_df_0 = Severetoxic_comment_df[Severetoxic_comment_df['severe_toxic'] == 0].iloc[0:1595,:]
+# # selecting 1595 values of Severetoxic_comment_df_0
+# Severe_toxic_comment_balanced=pd.concat([Severetoxic_comment_df_1,Severetoxic_comment_df_0])
+# # Concatenating Severetoxic_comment_df_1 and Severetoxic_comment_df_0
+# Obscene_comment_df_1 = Obscene_comment_df[Obscene_comment_df['obscene'] == 1].iloc[0:5000,:] 
+# Obscene_comment_df_0 = Obscene_comment_df[Obscene_comment_df['obscene'] == 0].iloc[0:5000,:]
+# Obscene_comment_balanced = pd.concat([Obscene_comment_df_1,Obscene_comment_df_0])
+# Threatening_comment_df_1 = Threatening_comment_df[Threatening_comment_df['threat'] == 1].iloc[0:478,:]
+# Threatening_comment_df_0 = Threatening_comment_df[Threatening_comment_df['threat'] == 0].iloc[0:478,:]
+# Threatening_comment_balanced = pd.concat([Threatening_comment_df_1,Threatening_comment_df_0])
+# Insulting_comment_df_1 = Insulting_comment_df[Insulting_comment_df['insult'] == 1].iloc[0:5000,:]
+# Insulting_comment_df_0 = Insulting_comment_df[Insulting_comment_df['insult'] == 0].iloc[0:5000,:]
+# Insulting_comment_balanced = pd.concat([Insulting_comment_df_1,Insulting_comment_df_0])
+# IdentityHate_comment_df_1 = IdentityHate_comment_df[IdentityHate_comment_df['identity_hate'] == 1].iloc[0:1405,:]
+# IdentityHate_comment_df_0 = IdentityHate_comment_df[IdentityHate_comment_df['identity_hate'] == 0].iloc[0:1405,:]
+# IdentityHate_comment_balanced = pd.concat([IdentityHate_comment_df_1,IdentityHate_comment_df_0])
+# def cv_tf_train_test(dataframe,label,vectorizer,ngram):
 
-	# Split the data into X and y data sets
-	X = dataframe.comment_text
-	y = dataframe[label]
+# 	# Split the data into X and y data sets
+# 	X = dataframe.comment_text
+# 	y = dataframe[label]
 
-	# Split our data into training and test data 
-	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=50)
+# 	# Split our data into training and test data 
+# 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=50)
 
-	# Using vectorizer and removing stopwords
-	cv1 = vectorizer(ngram_range=(ngram), stop_words='english')
+# 	# Using vectorizer and removing stopwords
+# 	cv1 = vectorizer(ngram_range=(ngram), stop_words='english')
 	
-	# Transforming x-train and x-test
-	X_train_cv1 = cv1.fit_transform(X_train) 
-	X_test_cv1  = cv1.transform(X_test)	  
+# 	# Transforming x-train and x-test
+# 	X_train_cv1 = cv1.fit_transform(X_train) 
+# 	X_test_cv1  = cv1.transform(X_test)	  
 	
-	## Machine learning models   
+# 	## Machine learning models   
 	
-	## Logistic regression
-	lr = LogisticRegression()
-	lr.fit(X_train_cv1, y_train)
+# 	## Logistic regression
+# 	lr = LogisticRegression()
+# 	lr.fit(X_train_cv1, y_train)
 	
-	## k-nearest neighbours
-	knn = KNeighborsClassifier(n_neighbors=5)
-	knn.fit(X_train_cv1, y_train)
+# 	## k-nearest neighbours
+# 	knn = KNeighborsClassifier(n_neighbors=5)
+# 	knn.fit(X_train_cv1, y_train)
 
-	## Naive Bayes
-	bnb = BernoulliNB()
-	bnb.fit(X_train_cv1, y_train)
+# 	## Naive Bayes
+# 	bnb = BernoulliNB()
+# 	bnb.fit(X_train_cv1, y_train)
 	
-	## Multinomial naive bayes
-	mnb = MultinomialNB()
-	mnb.fit(X_train_cv1, y_train)
+# 	## Multinomial naive bayes
+# 	mnb = MultinomialNB()
+# 	mnb.fit(X_train_cv1, y_train)
 	
-	## Support vector machine
-	svm_model = LinearSVC()
-	svm_model.fit(X_train_cv1, y_train)
+# 	## Support vector machine
+# 	svm_model = LinearSVC()
+# 	svm_model.fit(X_train_cv1, y_train)
 
-	## Random Forest 
-	randomforest = RandomForestClassifier(n_estimators=100, random_state=50)
-	randomforest.fit(X_train_cv1, y_train)
+# 	## Random Forest 
+# 	randomforest = RandomForestClassifier(n_estimators=100, random_state=50)
+# 	randomforest.fit(X_train_cv1, y_train)
 	
-	f1_score_data = {'F1 Score':[f1_score(lr.predict(X_test_cv1), y_test), f1_score(knn.predict(X_test_cv1), y_test), 
-								f1_score(bnb.predict(X_test_cv1), y_test), f1_score(mnb.predict(X_test_cv1), y_test),
-								f1_score(svm_model.predict(X_test_cv1), y_test), f1_score(randomforest.predict(X_test_cv1), y_test)]} 
-	## Saving f1 score results into a dataframe					 
-	df_f1 = pd.DataFrame(f1_score_data, index=['Log Regression','KNN', 'BernoulliNB', 'MultinomialNB', 'SVM', 'Random Forest'])  
+# 	f1_score_data = {'F1 Score':[f1_score(lr.predict(X_test_cv1), y_test), f1_score(knn.predict(X_test_cv1), y_test), 
+# 								f1_score(bnb.predict(X_test_cv1), y_test), f1_score(mnb.predict(X_test_cv1), y_test),
+# 								f1_score(svm_model.predict(X_test_cv1), y_test), f1_score(randomforest.predict(X_test_cv1), y_test)]} 
+# 	## Saving f1 score results into a dataframe					 
+# 	df_f1 = pd.DataFrame(f1_score_data, index=['Log Regression','KNN', 'BernoulliNB', 'MultinomialNB', 'SVM', 'Random Forest'])  
 
-	return df_f1
+# 	return df_f1
 
-severe_toxic_comment_cv = cv_tf_train_test(Severe_toxic_comment_balanced, 'severe_toxic', TfidfVectorizer, (1,1))
-severe_toxic_comment_cv.rename(columns={'F1 Score': 'F1 Score(severe_toxic)'}, inplace=True)
+# severe_toxic_comment_cv = cv_tf_train_test(Severe_toxic_comment_balanced, 'severe_toxic', TfidfVectorizer, (1,1))
+# severe_toxic_comment_cv.rename(columns={'F1 Score': 'F1 Score(severe_toxic)'}, inplace=True)
 
-obscene_comment_cv = cv_tf_train_test(Obscene_comment_balanced, 'obscene', TfidfVectorizer, (1,1))
-obscene_comment_cv.rename(columns={'F1 Score': 'F1 Score(obscene)'}, inplace=True)
+# obscene_comment_cv = cv_tf_train_test(Obscene_comment_balanced, 'obscene', TfidfVectorizer, (1,1))
+# obscene_comment_cv.rename(columns={'F1 Score': 'F1 Score(obscene)'}, inplace=True)
 
-threat_comment_cv = cv_tf_train_test(Threatening_comment_balanced, 'threat', TfidfVectorizer, (1,1))
-threat_comment_cv.rename(columns={'F1 Score': 'F1 Score(threat)'}, inplace=True)
+# threat_comment_cv = cv_tf_train_test(Threatening_comment_balanced, 'threat', TfidfVectorizer, (1,1))
+# threat_comment_cv.rename(columns={'F1 Score': 'F1 Score(threat)'}, inplace=True)
 
-insult_comment_cv = cv_tf_train_test(Insulting_comment_balanced, 'insult', TfidfVectorizer, (1,1))
-insult_comment_cv.rename(columns={'F1 Score': 'F1 Score(insult)'}, inplace=True)
+# insult_comment_cv = cv_tf_train_test(Insulting_comment_balanced, 'insult', TfidfVectorizer, (1,1))
+# insult_comment_cv.rename(columns={'F1 Score': 'F1 Score(insult)'}, inplace=True)
 
-identity_hatecomment_cv = cv_tf_train_test(IdentityHate_comment_balanced, 'identity_hate', TfidfVectorizer, (1,1))
-identity_hatecomment_cv.rename(columns={'F1 Score': 'F1 Score(identity_hate)'}, inplace=True)
+# identity_hatecomment_cv = cv_tf_train_test(IdentityHate_comment_balanced, 'identity_hate', TfidfVectorizer, (1,1))
+# identity_hatecomment_cv.rename(columns={'F1 Score': 'F1 Score(identity_hate)'}, inplace=True)
 
-X = Toxic_comment_balanced.comment_text
-y = Toxic_comment_balanced['toxic']
+# X = Toxic_comment_balanced.comment_text
+# y = Toxic_comment_balanced['toxic']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Initiate a Tfidf vectorizer
 tfv = TfidfVectorizer(ngram_range=(1,1), stop_words='english')
 
-X_train_fit = tfv.fit_transform(X_train)  
-X_test_fit = tfv.transform(X_test)  
-randomforest = RandomForestClassifier(n_estimators=100, random_state=50)
+# X_train_fit = tfv.fit_transform(X_train)  
+# X_test_fit = tfv.transform(X_test)  
+# randomforest = RandomForestClassifier(n_estimators=100, random_state=50)
 
-randomforest.fit(X_train_fit, y_train)
-randomforest.predict(X_test_fit)
-
-
+# randomforest.fit(X_train_fit, y_train)
+# randomforest.predict(X_test_fit)
 
 
 
+import pickle
+rfmp = open('app/static/rfmp','rb')
+randomforest = pickle.load(rfmp)
+rfmp.close()
+
+tfvp = open('app/static/tfvp','rb')
+tfv=pickle.load(tfvp)
+tfvp.close()
 
 
 
