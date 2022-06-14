@@ -1,6 +1,6 @@
 # Important imports
 from app import app
-from flask import request, render_template
+from flask import request, render_template, jsonify
 import os
 import pandas as pd
 import numpy as np
