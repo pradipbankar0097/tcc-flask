@@ -171,15 +171,18 @@ import numpy as np
 
 
 
-import pickle
-rfmp = open('app/static/rfmp','rb')
-randomforest = pickle.load(rfmp)
-rfmp.close()
+# import pickle
+# rfmp = open('app/static/rfmp','rb')
+# randomforest = pickle.load(rfmp)
+# rfmp.close()
 
-tfvp = open('app/static/tfvp','rb')
-tfv=pickle.load(tfvp)
-tfvp.close()
+# tfvp = open('app/static/tfvp','rb')
+# tfv=pickle.load(tfvp)
+# tfvp.close()
 
+from easy_object import oopen
+randomforest = oopen('app/static/rfmp')
+tfv = oopen('app/static/tfvp')
 
 
 
@@ -254,7 +257,17 @@ def forimage():
 	# 	if not found_toxic:
 	# 		cv2.imwrite(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'blur.jpg'),uploaded_image)
 	# 	return render_template('forimage.html',param="result is "+all_data[0][1])
-
+	
+@app.route("/api/<comment>", methods = ['GET'])
+def toxic_filter(comment):
+	comment1 = [comment,]
+	comment1_vect = tfv.transform(comment1)
+	toxic_percent = randomforest.predict_proba(comment1_vect)[:,1]*100
+	result = {
+		"comment":str(comment),
+		"toxic_percent":str(toxic_percent[0])[:4]
+	}
+	return jsonify(result)
 
 # Main function
 if __name__ == '__main__':
