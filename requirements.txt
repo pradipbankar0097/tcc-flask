@@ -43,5 +43,6 @@ gunicorn==20.1.0
 pandas
 sklearn
 scout-apm
+easy_object
 # unittest
 # easyocr
